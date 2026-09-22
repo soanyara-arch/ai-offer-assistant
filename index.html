@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AI Offer Assistant</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 70px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: 34px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 35px;
+    }
+
+    .form-label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 16px;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #111827;
+    }
+
+    .voice-section {
+      text-align: center;
+      margin: 25px 0;
+    }
+
+    #micButton {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      border: none;
+      background: #111827;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    #micButton:hover {
+      transform: scale(1.05);
+    }
+
+    #micButton.listening {
+      background: #dc2626;
+    }
+
+    #voiceStatus {
+      margin-top: 10px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+      color: #9ca3af;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .divider span {
+      margin: 0 15px;
+    }
+
+    #analyzeButton {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: #111827;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    #analyzeButton:hover {
+      opacity: 0.9;
+    }
+
+    .example {
+      margin-top: 25px;
+      background: #f9fafb;
+      padding: 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <h1>AI Offer Assistant</h1>
+
+    <p class="subtitle">
+      Create an Agreement of Purchase and Sale using your voice or text.
+    </p>
+
+    <div class="voice-section">
+
+      <button id="micButton">🎙️</button>
+
+      <div id="voiceStatus">
+        Click the microphone to describe the offer
+      </div>
+
+    </div>
+
+    <div class="divider">
+      <span>OR TYPE</span>
+    </div>
+
+    <label class="form-label">
+      Tell me about the offer
+    </label>
+
+    <textarea
+      id="offerText"
+      placeholder="Example: Create an offer for 123 Main Street. Buyers are John Smith and Sarah Smith. Offer $850,000 with a $40,000 deposit upon acceptance. Closing December 15..."
+    ></textarea>
+
+    <button id="analyzeButton">
+      ✨ Analyze Offer
+    </button>
+
+    <div class="example">
+      <strong>Try saying:</strong><br>
+      “Create an offer for 123 Main Street. Buyers are
+      John Smith and Sarah Smith. Purchase price is
+      $850,000. Deposit is $40,000 upon acceptance.
+      Irrevocable tonight at 9 PM. Closing December 15.
+      Include the fridge, stove, dishwasher, washer and dryer.”
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+  const micButton = document.getElementById("micButton");
+  const offerText = document.getElementById("offerText");
+  const voiceStatus = document.getElementById("voiceStatus");
+  const analyzeButton = document.getElementById("analyzeButton");
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (SpeechRecognition) {
+
+    const recognition = new SpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-CA";
+
+    micButton.addEventListener("click", () => {
+
+      voiceStatus.textContent = "Listening... speak now.";
+
+      micButton.classList.add("listening");
+
+      recognition.start();
+
+    });
+
+    recognition.onresult = (event) => {
+
+      const transcript =
+        event.results[0][0].transcript;
+
+      offerText.value =
+        offerText.value +
+        (offerText.value ? " " : "") +
+        transcript;
+
+      voiceStatus.textContent =
+        "Voice captured ✓";
+
+    };
+
+    recognition.onend = () => {
+
+      micButton.classList.remove("listening");
+
+    };
+
+    recognition.onerror = () => {
+
+      voiceStatus.textContent =
+        "I couldn't hear that. Please try again.";
+
+      micButton.classList.remove("listening");
+
+    };
+
+  } else {
+
+    micButton.disabled = true;
+
+    voiceStatus.textContent =
+      "Voice recognition is not supported by this browser.";
+
+  }
+
+  analyzeButton.addEventListener("click", () => {
+
+    const text = offerText.value.trim();
+
+    if (!text) {
+
+      alert(
+        "Please speak or type the offer details first."
+      );
+
+      return;
+
+    }
+
+    alert(
+      "Great! The next step is connecting AI so it can analyze:\n\n" +
+      text
+    );
+
+  });
+
+</script>
+
+</body>
+</html>
