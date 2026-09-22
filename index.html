@@ -229,6 +229,24 @@ textarea.review-input {
   font-weight: 600;
   color: #374151;
 }
+
+    #confirmButton {
+  width: 100%;
+  padding: 16px;
+  margin-top: 25px;
+  border: none;
+  border-radius: 12px;
+  background: #111827;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#confirmButton:hover {
+  opacity: 0.9;
+}
+  
   </style>
 </head>
 
@@ -288,6 +306,10 @@ textarea.review-input {
       <div id="offerResults"></div>
 
       <div id="missingContainer"></div>
+      <button id="confirmButton" type="button">
+  ✓ Confirm Offer Details
+</button>
+      
     </div>
 
   </div>
@@ -633,6 +655,37 @@ textarea.review-input {
 
     }
   );
+
+  const confirmButton = document.getElementById("confirmButton");
+
+confirmButton.addEventListener("click", () => {
+  const reviewedOffer = {};
+
+  document
+    .querySelectorAll("#offerResults input, #offerResults textarea")
+    .forEach((input) => {
+      reviewedOffer[input.dataset.field] = input.value.trim() || null;
+    });
+
+  const stillMissing = Object.entries(reviewedOffer)
+    .filter(([key, value]) => !value)
+    .map(([key]) => labels[key] || key);
+
+  if (stillMissing.length > 0) {
+    alert(
+      "Please complete the missing information before continuing:\n\n" +
+      stillMissing.join(", ")
+    );
+    return;
+  }
+
+  console.log("Confirmed offer:", reviewedOffer);
+
+  alert(
+    "Offer details confirmed! ✓\n\n" +
+    "The information is ready for the next step."
+  );
+});
 
 </script>
 
