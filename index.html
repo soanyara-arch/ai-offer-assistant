@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>AI Offer Assistant</title>
 
   <style>
@@ -127,6 +126,11 @@
       opacity: 0.9;
     }
 
+    #analyzeButton:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .example {
       margin-top: 25px;
       background: #f9fafb;
@@ -136,13 +140,61 @@
       color: #6b7280;
       line-height: 1.6;
     }
+
+    #resultSection {
+      display: none;
+      margin-top: 30px;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 30px;
+    }
+
+    .result-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .field-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .missing-box {
+      margin-top: 25px;
+      padding: 18px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+    }
+
+    .missing-box strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .error-box {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      color: #991b1b;
+    }
   </style>
 </head>
 
 <body>
 
 <div class="container">
-
   <div class="card">
 
     <h1>AI Offer Assistant</h1>
@@ -152,13 +204,10 @@
     </p>
 
     <div class="voice-section">
-
       <button id="micButton">🎙️</button>
-
       <div id="voiceStatus">
         Click the microphone to describe the offer
       </div>
-
     </div>
 
     <div class="divider">
@@ -171,7 +220,7 @@
 
     <textarea
       id="offerText"
-      placeholder="Example: Create an offer for 123 Main Street. Buyers are John Smith and Sarah Smith. Offer $850,000 with a $40,000 deposit upon acceptance. Closing December 15..."
+      placeholder="Example: Create an offer for 123 Main Street. Buyers are John Smith and Sarah Smith. Offer $850,000 with a $40,000 deposit upon acceptance. Closing December 15, 2026..."
     ></textarea>
 
     <button id="analyzeButton">
@@ -179,46 +228,93 @@
     </button>
 
     <div class="example">
-      <strong>Try saying:</strong><br>
-      “Create an offer for 123 Main Street. Buyers are
-      John Smith and Sarah Smith. Purchase price is
-      $850,000. Deposit is $40,000 upon acceptance.
-      Irrevocable tonight at 9 PM. Closing December 15.
-      Include the fridge, stove, dishwasher, washer and dryer.”
+      <strong>Try saying:</strong><br><br>
+
+      “Create an offer for 123 Main Street.
+      Buyers are John Smith and Sarah Smith.
+      Purchase price is $850,000.
+      Deposit is $40,000 upon acceptance.
+      Irrevocable September 22, 2026 at 9 PM by the buyer.
+      Closing December 15, 2026.
+      Include the fridge, stove, dishwasher,
+      washer and dryer.”
+    </div>
+
+    <div id="errorContainer"></div>
+
+    <div id="resultSection">
+      <h2 class="result-title">Offer Review</h2>
+
+      <div id="offerResults"></div>
+
+      <div id="missingContainer"></div>
     </div>
 
   </div>
-
 </div>
 
 <script>
 
-  const micButton = document.getElementById("micButton");
-  const offerText = document.getElementById("offerText");
-  const voiceStatus = document.getElementById("voiceStatus");
-  const analyzeButton = document.getElementById("analyzeButton");
+  const SUPABASE_URL =
+    "https://gbrfvyfdrsznewhmxer.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_srVo5c5VUoPJSEouRw3MRQ_AXQ6dxkm";
+
+  const FUNCTION_URL =
+    `${SUPABASE_URL}/functions/v1/analyze-offer`;
+
+  const micButton =
+    document.getElementById("micButton");
+
+  const offerText =
+    document.getElementById("offerText");
+
+  const voiceStatus =
+    document.getElementById("voiceStatus");
+
+  const analyzeButton =
+    document.getElementById("analyzeButton");
+
+  const resultSection =
+    document.getElementById("resultSection");
+
+  const offerResults =
+    document.getElementById("offerResults");
+
+  const missingContainer =
+    document.getElementById("missingContainer");
+
+  const errorContainer =
+    document.getElementById("errorContainer");
+
 
   const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
+
   if (SpeechRecognition) {
 
-    const recognition = new SpeechRecognition();
+    const recognition =
+      new SpeechRecognition();
 
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = "en-CA";
 
+
     micButton.addEventListener("click", () => {
 
-      voiceStatus.textContent = "Listening... speak now.";
+      voiceStatus.textContent =
+        "Listening... speak now.";
 
       micButton.classList.add("listening");
 
       recognition.start();
 
     });
+
 
     recognition.onresult = (event) => {
 
@@ -235,11 +331,13 @@
 
     };
 
+
     recognition.onend = () => {
 
       micButton.classList.remove("listening");
 
     };
+
 
     recognition.onerror = () => {
 
@@ -259,26 +357,249 @@
 
   }
 
-  analyzeButton.addEventListener("click", () => {
 
-    const text = offerText.value.trim();
+  const labels = {
 
-    if (!text) {
+    buyer_names: "Buyer(s)",
+    seller_names: "Seller(s)",
+    property_address: "Property Address",
+    purchase_price: "Purchase Price",
+    deposit_amount: "Deposit Amount",
+    deposit_timing: "Deposit Timing",
+    deposit_holder: "Deposit Holder",
+    irrevocable_date: "Irrevocable Date",
+    irrevocable_time: "Irrevocable Time",
+    irrevocable_by: "Irrevocable By",
+    completion_date: "Closing Date",
+    chattels_included: "Chattels Included",
+    fixtures_excluded: "Fixtures Excluded",
+    rental_items: "Rental Items",
+    conditions: "Conditions",
+    legal_description: "Legal Description",
+    title_search_date: "Title Search Date",
+    additional_instructions: "Additional Instructions"
 
-      alert(
-        "Please speak or type the offer details first."
-      );
+  };
 
-      return;
+
+  function formatValue(key, value) {
+
+    if (value === null || value === "") {
+      return "Not provided";
+    }
+
+    if (
+      key === "purchase_price" ||
+      key === "deposit_amount"
+    ) {
+
+      return new Intl.NumberFormat(
+        "en-CA",
+        {
+          style: "currency",
+          currency: "CAD",
+          maximumFractionDigits: 0
+        }
+      ).format(value);
 
     }
 
-    alert(
-      "Great! The next step is connecting AI so it can analyze:\n\n" +
-      text
+    return value;
+
+  }
+
+
+  function showResults(data) {
+
+    offerResults.innerHTML = "";
+
+    missingContainer.innerHTML = "";
+
+
+    Object.entries(data.offer).forEach(
+      ([key, value]) => {
+
+        const field =
+          document.createElement("div");
+
+        field.className = "field";
+
+
+        const label =
+          document.createElement("div");
+
+        label.className = "field-label";
+
+        label.textContent =
+          labels[key] || key;
+
+
+        const fieldValue =
+          document.createElement("div");
+
+        fieldValue.className =
+          "field-value";
+
+        fieldValue.textContent =
+          formatValue(key, value);
+
+
+        field.appendChild(label);
+
+        field.appendChild(fieldValue);
+
+        offerResults.appendChild(field);
+
+      }
     );
 
-  });
+
+    if (
+      data.missing_fields &&
+      data.missing_fields.length > 0
+    ) {
+
+      const missingBox =
+        document.createElement("div");
+
+      missingBox.className =
+        "missing-box";
+
+
+      const heading =
+        document.createElement("strong");
+
+      heading.textContent =
+        "⚠️ Information still needed";
+
+
+      const missingText =
+        document.createElement("div");
+
+      missingText.textContent =
+        data.missing_fields
+          .map(field => labels[field] || field)
+          .join(", ");
+
+
+      missingBox.appendChild(heading);
+
+      missingBox.appendChild(missingText);
+
+      missingContainer.appendChild(
+        missingBox
+      );
+
+    }
+
+
+    resultSection.style.display =
+      "block";
+
+  }
+
+
+  analyzeButton.addEventListener(
+    "click",
+    async () => {
+
+      const text =
+        offerText.value.trim();
+
+
+      if (!text) {
+
+        alert(
+          "Please speak or type the offer details first."
+        );
+
+        return;
+
+      }
+
+
+      errorContainer.innerHTML = "";
+
+      resultSection.style.display =
+        "none";
+
+
+      analyzeButton.disabled = true;
+
+      analyzeButton.textContent =
+        "Analyzing offer...";
+
+
+      try {
+
+        const response =
+          await fetch(
+            FUNCTION_URL,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+
+                "apikey":
+                  SUPABASE_PUBLISHABLE_KEY,
+
+                "Authorization":
+                  `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+              },
+
+              body: JSON.stringify({
+                text: text
+              })
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.error ||
+            "The offer could not be analyzed."
+          );
+
+        }
+
+
+        showResults(data);
+
+
+      } catch (error) {
+
+        const errorBox =
+          document.createElement("div");
+
+        errorBox.className =
+          "error-box";
+
+        errorBox.textContent =
+          "Something went wrong: " +
+          error.message;
+
+        errorContainer.appendChild(
+          errorBox
+        );
+
+      } finally {
+
+        analyzeButton.disabled = false;
+
+        analyzeButton.textContent =
+          "✨ Analyze Offer";
+
+      }
+
+    }
+  );
 
 </script>
 
