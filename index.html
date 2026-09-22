@@ -188,7 +188,47 @@
       border: 1px solid #fecaca;
       border-radius: 12px;
       color: #991b1b;
-    }
+    }  .review-input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 7px;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  background: white;
+  color: #1f2937;
+}
+
+.review-input:focus {
+  outline: none;
+  border-color: #111827;
+  box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.08);
+}
+
+textarea.review-input {
+  resize: vertical;
+  min-height: 85px;
+}
+
+.missing-input {
+  background: #fffaf3;
+  border-color: #f0b76b;
+}
+
+.missing-input::placeholder {
+  color: #b45309;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field-label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+}
   </style>
 </head>
 
@@ -410,94 +450,87 @@
 
 
   function showResults(data) {
+  offerResults.innerHTML = "";
+  missingContainer.innerHTML = "";
 
-    offerResults.innerHTML = "";
+  Object.entries(data.offer).forEach(([key, value]) => {
+    const field = document.createElement("div");
+    field.className = "field";
 
-    missingContainer.innerHTML = "";
+    const label = document.createElement("label");
+    label.className = "field-label";
+    label.textContent = labels[key] || key;
 
+    let input;
 
-    Object.entries(data.offer).forEach(
-      ([key, value]) => {
+    const longFields = [
+      "chattels_included",
+      "fixtures_excluded",
+      "rental_items",
+      "conditions",
+      "legal_description",
+      "additional_instructions"
+    ];
 
-        const field =
-          document.createElement("div");
+    if (longFields.includes(key)) {
+      input = document.createElement("textarea");
+      input.rows = 3;
+    } else {
+      input = document.createElement("input");
 
-        field.className = "field";
-
-
-        const label =
-          document.createElement("div");
-
-        label.className = "field-label";
-
-        label.textContent =
-          labels[key] || key;
-
-
-        const fieldValue =
-          document.createElement("div");
-
-        fieldValue.className =
-          "field-value";
-
-        fieldValue.textContent =
-          formatValue(key, value);
-
-
-        field.appendChild(label);
-
-        field.appendChild(fieldValue);
-
-        offerResults.appendChild(field);
-
+      if (
+        key === "irrevocable_date" ||
+        key === "completion_date" ||
+        key === "title_search_date"
+      ) {
+        input.type = "date";
+      } else if (key === "irrevocable_time") {
+        input.type = "time";
+      } else if (
+        key === "purchase_price" ||
+        key === "deposit_amount"
+      ) {
+        input.type = "number";
+      } else {
+        input.type = "text";
       }
-    );
-
-
-    if (
-      data.missing_fields &&
-      data.missing_fields.length > 0
-    ) {
-
-      const missingBox =
-        document.createElement("div");
-
-      missingBox.className =
-        "missing-box";
-
-
-      const heading =
-        document.createElement("strong");
-
-      heading.textContent =
-        "⚠️ Information still needed";
-
-
-      const missingText =
-        document.createElement("div");
-
-      missingText.textContent =
-        data.missing_fields
-          .map(field => labels[field] || field)
-          .join(", ");
-
-
-      missingBox.appendChild(heading);
-
-      missingBox.appendChild(missingText);
-
-      missingContainer.appendChild(
-        missingBox
-      );
-
     }
 
+    input.id = key;
+    input.name = key;
+    input.className = "review-input";
 
-    resultSection.style.display =
-      "block";
+    if (value !== null && value !== undefined) {
+      input.value = value;
+    }
 
-  }
+    if (value === null || value === "") {
+      input.placeholder = "Information needed";
+      input.classList.add("missing-input");
+    }
 
+    field.appendChild(label);
+    field.appendChild(input);
+    offerResults.appendChild(field);
+  });
+
+  const reviewNotice = document.createElement("div");
+  reviewNotice.className = "missing-box";
+
+  const heading = document.createElement("strong");
+  heading.textContent = "✓ Review offer details";
+
+  const reviewText = document.createElement("div");
+  reviewText.textContent =
+    "Review every field above and enter any missing information before continuing.";
+
+  reviewNotice.appendChild(heading);
+  reviewNotice.appendChild(reviewText);
+
+  missingContainer.appendChild(reviewNotice);
+
+  resultSection.style.display = "block";
+}
 
   analyzeButton.addEventListener(
     "click",
