@@ -661,7 +661,7 @@ textarea.review-input {
 
   const confirmButton = document.getElementById("confirmButton");
 
-confirmButton.addEventListener("click", () => {
+confirmButton.addEventListener("click", async () => {
   const reviewedOffer = {};
 
  document
@@ -688,12 +688,49 @@ confirmButton.addEventListener("click", () => {
     return;
   }
 
-  console.log("Confirmed offer:", reviewedOffer);
+  try {
+  confirmButton.disabled = true;
+  confirmButton.textContent = "Saving offer...";
+
+  const response = await fetch(
+    `${SUPABASE_URL}/rest/v1/Transactions`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_PUBLISHABLE_KEY,
+        "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({
+        ...reviewedOffer,
+        original_transcript: offerText.value.trim()
+      })
+    }
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
 
   alert(
-    "Offer details confirmed! ✓\n\n" +
-    "The information is ready for the next step."
+    "Offer saved successfully! ✓\n\n" +
+    "The confirmed offer is now saved."
   );
+
+} catch (error) {
+  console.error("Save error:", error);
+
+  alert(
+    "The offer could not be saved.\n\n" +
+    "Please try again."
+  );
+
+} finally {
+  confirmButton.disabled = false;
+  confirmButton.textContent = "✓ Confirm Offer Details";
+}
 });
 
 </script>
