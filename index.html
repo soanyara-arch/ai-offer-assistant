@@ -1061,7 +1061,35 @@ apsButton.addEventListener("click", async () => {
 
     const sellerNames =
       document.getElementById("seller_names")?.value || "";
+const propertyAddress =
+  document.getElementById("property_address")?.value || "";
 
+const purchasePrice =
+  document.getElementById("purchase_price")?.value || "";
+
+const depositAmount =
+  document.getElementById("deposit_amount")?.value || "";
+
+const depositTiming =
+  document.getElementById("deposit_timing")?.value || "";
+
+const depositHolder =
+  document.getElementById("deposit_holder")?.value || "";
+
+const irrevocableDate =
+  document.getElementById("irrevocable_date")?.value || "";
+
+const irrevocableTime =
+  document.getElementById("irrevocable_time")?.value || "";
+
+const irrevocableBy =
+  document.getElementById("irrevocable_by")?.value || "";
+
+const completionDate =
+  document.getElementById("completion_date")?.value || "";
+
+const legalDescription =
+  document.getElementById("legal_description")?.value || "";
     const pdfUrl = "form100-clean.pdf";
 
     const existingPdfBytes =
@@ -1101,6 +1129,113 @@ firstPage.drawText(sellerNames, {
   size: 11,
   font
 });
+    // ---------- PAGE 1 APS FIELDS ----------
+
+// Property Address
+if (propertyAddress) {
+  firstPage.drawText(propertyAddress, {
+    x: 105,
+    y: 539,
+    size: 11,
+    font
+  });
+}
+
+// Legal Description
+if (legalDescription) {
+  firstPage.drawText(legalDescription, {
+    x: 40,
+    y: 406,
+    size: 10,
+    font
+  });
+}
+
+// Purchase Price
+if (purchasePrice) {
+  const formattedPrice =
+    "$" + Number(purchasePrice).toLocaleString("en-CA");
+
+  firstPage.drawText(formattedPrice, {
+    x: 480,
+    y: 365,
+    size: 11,
+    font
+  });
+}
+
+// Deposit Timing
+if (depositTiming) {
+  firstPage.drawText(depositTiming, {
+    x: 115,
+    y: 318,
+    size: 10,
+    font
+  });
+}
+
+// Deposit Amount
+if (depositAmount) {
+  const formattedDeposit =
+    "$" + Number(depositAmount).toLocaleString("en-CA");
+
+  firstPage.drawText(formattedDeposit, {
+    x: 430,
+    y: 289,
+    size: 11,
+    font
+  });
+}
+
+// Deposit Holder
+if (depositHolder) {
+  firstPage.drawText(depositHolder, {
+    x: 150,
+    y: 264,
+    size: 10,
+    font
+  });
+}
+
+// Irrevocable By
+if (irrevocableBy) {
+  firstPage.drawText(irrevocableBy, {
+    x: 242,
+    y: 157,
+    size: 10,
+    font
+  });
+}
+
+// Irrevocable Time
+if (irrevocableTime) {
+  firstPage.drawText(irrevocableTime, {
+    x: 447,
+    y: 157,
+    size: 10,
+    font
+  });
+}
+
+// Irrevocable Date
+if (irrevocableDate) {
+  firstPage.drawText(irrevocableDate, {
+    x: 115,
+    y: 132,
+    size: 10,
+    font
+  });
+}
+
+// Completion Date
+if (completionDate) {
+  firstPage.drawText(completionDate, {
+    x: 385,
+    y: 92,
+    size: 10,
+    font
+  });
+}
     const pdfBytes = await pdfDoc.save();
 
     const blob = new Blob(
