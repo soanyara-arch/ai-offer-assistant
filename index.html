@@ -556,7 +556,12 @@ async function checkSession() {
     showLogin();
   }
 }
-
+authPassword.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    loginButton.click();
+  }
+});
 loginButton.addEventListener("click", async () => {
   const email = authEmail.value.trim();
   const password = authPassword.value;
