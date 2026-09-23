@@ -1129,13 +1129,13 @@ firstPage.drawText(sellerNames, {
   size: 11,
   font
 });
-    // ---------- PAGE 1 APS FIELDS ----------
+// ---------- PAGE 1 APS FIELDS ----------
 
 // Property Address
 if (propertyAddress) {
   firstPage.drawText(propertyAddress, {
     x: 105,
-    y: 539,
+    y: 566,
     size: 11,
     font
   });
@@ -1145,7 +1145,7 @@ if (propertyAddress) {
 if (legalDescription) {
   firstPage.drawText(legalDescription, {
     x: 40,
-    y: 406,
+    y: 438,
     size: 10,
     font
   });
@@ -1157,8 +1157,8 @@ if (purchasePrice) {
     "$" + Number(purchasePrice).toLocaleString("en-CA");
 
   firstPage.drawText(formattedPrice, {
-    x: 480,
-    y: 365,
+    x: 490,
+    y: 378,
     size: 11,
     font
   });
@@ -1167,8 +1167,8 @@ if (purchasePrice) {
 // Deposit Timing
 if (depositTiming) {
   firstPage.drawText(depositTiming, {
-    x: 115,
-    y: 318,
+    x: 145,
+    y: 350,
     size: 10,
     font
   });
@@ -1181,7 +1181,7 @@ if (depositAmount) {
 
   firstPage.drawText(formattedDeposit, {
     x: 430,
-    y: 289,
+    y: 324,
     size: 11,
     font
   });
@@ -1191,7 +1191,7 @@ if (depositAmount) {
 if (depositHolder) {
   firstPage.drawText(depositHolder, {
     x: 150,
-    y: 264,
+    y: 300,
     size: 10,
     font
   });
@@ -1200,8 +1200,8 @@ if (depositHolder) {
 // Irrevocable By
 if (irrevocableBy) {
   firstPage.drawText(irrevocableBy, {
-    x: 242,
-    y: 157,
+    x: 350,
+    y: 184,
     size: 10,
     font
   });
@@ -1210,8 +1210,8 @@ if (irrevocableBy) {
 // Irrevocable Time
 if (irrevocableTime) {
   firstPage.drawText(irrevocableTime, {
-    x: 447,
-    y: 157,
+    x: 470,
+    y: 184,
     size: 10,
     font
   });
@@ -1221,7 +1221,7 @@ if (irrevocableTime) {
 if (irrevocableDate) {
   firstPage.drawText(irrevocableDate, {
     x: 115,
-    y: 132,
+    y: 155,
     size: 10,
     font
   });
@@ -1230,8 +1230,8 @@ if (irrevocableDate) {
 // Completion Date
 if (completionDate) {
   firstPage.drawText(completionDate, {
-    x: 385,
-    y: 92,
+    x: 405,
+    y: 116,
     size: 10,
     font
   });
