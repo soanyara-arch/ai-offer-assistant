@@ -1074,7 +1074,10 @@ apsButton.addEventListener("click", async () => {
 
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
 
-    PDFDocument.load
+    const pdfDoc =
+  await PDFDocument.load(existingPdfBytes, {
+    ignoreEncryption: true
+  });
 
     const font =
       await pdfDoc.embedFont(StandardFonts.Helvetica);
