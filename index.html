@@ -1085,21 +1085,33 @@ apsButton.addEventListener("click", async () => {
     const pages = pdfDoc.getPages();
     const firstPage = pages[0];
 
-    firstPage.drawText(buyerNames, {
-      x: 105,
-      y: 682,
-      size: 9,
-      font: font,
-      color: rgb(0, 0, 0)
-    });
+ const form = pdfDoc.getForm();
 
-    firstPage.drawText(sellerNames, {
-      x: 105,
-      y: 650,
-      size: 9,
-      font: font,
-      color: rgb(0, 0, 0)
-    });
+const buyerField = form.createTextField("buyer_names");
+buyerField.setText(buyerNames);
+buyerField.setFontSize(9);
+buyerField.addToPage(firstPage, {
+  x: 105,
+  y: 635,
+  width: 385,
+  height: 16,
+  borderWidth: 0,
+  backgroundColor: undefined
+});
+
+const sellerField = form.createTextField("seller_names");
+sellerField.setText(sellerNames);
+sellerField.setFontSize(9);
+sellerField.addToPage(firstPage, {
+  x: 105,
+  y: 603,
+  width: 415,
+  height: 16,
+  borderWidth: 0,
+  backgroundColor: undefined
+});
+
+form.updateFieldAppearances(font);
 
     const pdfBytes = await pdfDoc.save();
 
