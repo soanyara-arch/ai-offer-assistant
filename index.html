@@ -670,9 +670,11 @@ confirmButton.addEventListener("click", () => {
       reviewedOffer[input.dataset.field] = input.value.trim() || null;
     });
 
-  const stillMissing = Object.entries(reviewedOffer)
-    .filter(([key, value]) => !value)
-    .map(([key]) => labels[key] || key);
+ const stillMissing = Array.from(
+  document.querySelectorAll("#offerResults input, #offerResults textarea")
+)
+  .filter((input) => !input.value.trim())
+  .map((input) => labels[input.dataset.field] || input.dataset.field || "Missing field");
 
   if (stillMissing.length > 0) {
     alert(
