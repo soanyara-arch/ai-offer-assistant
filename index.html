@@ -336,7 +336,33 @@ textarea.review-input {
 #appContent {
   display: none;
 }
-  
+  .app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.app-header h1 {
+  margin: 0;
+}
+
+#logoutButton {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#logoutButton:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
   </style>
 </head>
 
@@ -391,7 +417,10 @@ textarea.review-input {
 <div class="container">
   <div class="card">
 
-    <h1>AI Offer Assistant</h1>
+   <div class="app-header">
+  <h1>AI Offer Assistant</h1>
+  <button id="logoutButton" type="button">Log Out</button>
+</div>
 
     <p class="subtitle">
       Create an Agreement of Purchase and Sale using your voice or text.
@@ -610,7 +639,12 @@ supabaseClient.auth.onAuthStateChange((_event, session) => {
 });
 
 checkSession();
+const logoutButton = document.getElementById("logoutButton");
 
+logoutButton.addEventListener("click", async () => {
+  await supabaseClient.auth.signOut();
+  showLogin();
+});
 // ---------- END AGENT AUTHENTICATION ----------
 
 
