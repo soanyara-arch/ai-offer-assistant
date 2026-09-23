@@ -1194,6 +1194,17 @@ firstPage.drawText(sellerNames, {
 });
 
 // Page 1 block is temporarily gone
+    // ---------- PAGE 1 APS FIELDS ----------
+
+// Property Address
+if (propertyAddress) {
+  firstPage.drawText(propertyAddress, {
+    x: 105,
+    y: 566,
+    size: 11,
+    font
+  });
+}
 
 
     const pdfBytes = await pdfDoc.save();
