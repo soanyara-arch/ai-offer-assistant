@@ -1062,7 +1062,7 @@ apsButton.addEventListener("click", async () => {
     const sellerNames =
       document.getElementById("seller_names")?.value || "";
 
-    const pdfUrl = "form100.pdf";
+    const pdfUrl = "form100-clean.pdf";
 
     const existingPdfBytes =
       await fetch(pdfUrl).then((res) => {
