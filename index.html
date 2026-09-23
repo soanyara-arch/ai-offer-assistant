@@ -1110,7 +1110,7 @@ sellerField.addToPage(firstPage, {
 });
 
 form.updateFieldAppearances(font);
-
+form.flatten();
     const pdfBytes = await pdfDoc.save();
 
     const blob = new Blob(
