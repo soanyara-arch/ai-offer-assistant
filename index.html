@@ -1129,113 +1129,16 @@ firstPage.drawText(sellerNames, {
   size: 11,
   font
 });
-// ---------- PAGE 1 APS FIELDS ----------
+firstPage.drawText(sellerNames, {
+  x: 105,
+  y: 628,
+  size: 11,
+  font
+});
 
-// Property Address
-if (propertyAddress) {
-  firstPage.drawText(propertyAddress, {
-    x: 105,
-    y: 566,
-    size: 11,
-    font
-  });
-}
+// Page 1 block is temporarily gone
 
-// Legal Description
-if (legalDescription) {
-  firstPage.drawText(legalDescription, {
-    x: 40,
-    y: 438,
-    size: 10,
-    font
-  });
-}
 
-// Purchase Price
-if (purchasePrice) {
-  const formattedPrice =
-    "$" + Number(purchasePrice).toLocaleString("en-CA");
-
-  firstPage.drawText(formattedPrice, {
-    x: 490,
-    y: 378,
-    size: 11,
-    font
-  });
-}
-
-// Deposit Timing
-if (depositTiming) {
-  firstPage.drawText(depositTiming, {
-    x: 145,
-    y: 350,
-    size: 10,
-    font
-  });
-}
-
-// Deposit Amount
-if (depositAmount) {
-  const formattedDeposit =
-    "$" + Number(depositAmount).toLocaleString("en-CA");
-
-  firstPage.drawText(formattedDeposit, {
-    x: 430,
-    y: 324,
-    size: 11,
-    font
-  });
-}
-
-// Deposit Holder
-if (depositHolder) {
-  firstPage.drawText(depositHolder, {
-    x: 150,
-    y: 300,
-    size: 10,
-    font
-  });
-}
-
-// Irrevocable By
-if (irrevocableBy) {
-  firstPage.drawText(irrevocableBy, {
-    x: 350,
-    y: 184,
-    size: 10,
-    font
-  });
-}
-
-// Irrevocable Time
-if (irrevocableTime) {
-  firstPage.drawText(irrevocableTime, {
-    x: 470,
-    y: 184,
-    size: 10,
-    font
-  });
-}
-
-// Irrevocable Date
-if (irrevocableDate) {
-  firstPage.drawText(irrevocableDate, {
-    x: 115,
-    y: 155,
-    size: 10,
-    font
-  });
-}
-
-// Completion Date
-if (completionDate) {
-  firstPage.drawText(completionDate, {
-    x: 405,
-    y: 116,
-    size: 10,
-    font
-  });
-}
     const pdfBytes = await pdfDoc.save();
 
     const blob = new Blob(
