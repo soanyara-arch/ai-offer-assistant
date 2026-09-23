@@ -1049,7 +1049,81 @@ generateApsButton.style.display = "block";
   confirmButton.textContent = "✓ Confirm Offer Details";
 }
 });
+const apsButton = document.getElementById("generateApsButton");
 
+apsButton.addEventListener("click", async () => {
+  try {
+    apsButton.disabled = true;
+    apsButton.textContent = "Generating APS...";
+
+    const buyerNames =
+      document.getElementById("buyer_names")?.value || "";
+
+    const sellerNames =
+      document.getElementById("seller_names")?.value || "";
+
+    const pdfUrl =
+      "Agreement%20of%20Purchase%20and%20Sale.pdf";
+
+    const existingPdfBytes =
+      await fetch(pdfUrl).then((res) => {
+        if (!res.ok) {
+          throw new Error("Could not load the APS PDF.");
+        }
+        return res.arrayBuffer();
+      });
+
+    const { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+    const pdfDoc =
+      await PDFDocument.load(existingPdfBytes);
+
+    const font =
+      await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
+
+    firstPage.drawText(buyerNames, {
+      x: 105,
+      y: 682,
+      size: 9,
+      font: font,
+      color: rgb(0, 0, 0)
+    });
+
+    firstPage.drawText(sellerNames, {
+      x: 105,
+      y: 650,
+      size: 9,
+      font: font,
+      color: rgb(0, 0, 0)
+    });
+
+    const pdfBytes = await pdfDoc.save();
+
+    const blob = new Blob(
+      [pdfBytes],
+      { type: "application/pdf" }
+    );
+
+    const blobUrl = URL.createObjectURL(blob);
+
+    window.open(blobUrl, "_blank");
+
+  } catch (error) {
+    console.error("APS generation error:", error);
+
+    alert(
+      "The Agreement of Purchase and Sale could not be generated."
+    );
+
+  } finally {
+    apsButton.disabled = false;
+    apsButton.textContent =
+      "📄 Generate Agreement of Purchase and Sale";
+  }
+});
 </script>
 
 </body>
