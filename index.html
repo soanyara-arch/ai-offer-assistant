@@ -1104,18 +1104,71 @@ const legalDescription =
         return res.arrayBuffer();
       });
 
-    const { PDFDocument, StandardFonts, rgb } = PDFLib;
+    const { PDFDocument, StandardFonts } = PDFLib;
 
-    const pdfDoc =
-  await PDFDocument.load(existingPdfBytes, {
-    ignoreEncryption: true
+// Load the original APS with PDF.js.
+// PDF.js will render the original pages exactly as they appear.
+const sourcePdf = await pdfjsLib.getDocument({
+  data: new Uint8Array(existingPdfBytes)
+}).promise;
+
+// Create a completely NEW PDF.
+// We will not edit/resave the original APS itself.
+const pdfDoc = await PDFDocument.create();
+
+for (let pageNumber = 1; pageNumber <= sourcePdf.numPages; pageNumber++) {
+
+  const sourcePage =
+    await sourcePdf.getPage(pageNumber);
+
+  const viewport =
+    sourcePage.getViewport({ scale: 2 });
+
+  const canvas =
+    document.createElement("canvas");
+
+  const context =
+    canvas.getContext("2d");
+
+  canvas.width =
+    Math.ceil(viewport.width);
+
+  canvas.height =
+    Math.ceil(viewport.height);
+
+  await sourcePage.render({
+    canvasContext: context,
+    viewport: viewport
+  }).promise;
+
+  const pageImage =
+    await pdfDoc.embedPng(
+      canvas.toDataURL("image/png")
+    );
+
+  const newPage =
+    pdfDoc.addPage([
+      viewport.width / 2,
+      viewport.height / 2
+    ]);
+
+  newPage.drawImage(pageImage, {
+    x: 0,
+    y: 0,
+    width: viewport.width / 2,
+    height: viewport.height / 2
   });
+}
 
-    const font =
-      await pdfDoc.embedFont(StandardFonts.Helvetica);
+// Font used ONLY for information our website adds.
+const font =
+  await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-    const pages = pdfDoc.getPages();
-    const firstPage = pages[0];
+const pages =
+  pdfDoc.getPages();
+
+const firstPage =
+  pages[0];
 
  // Write clean permanent text directly onto the APS.
 // Editing happens on the website; the generated PDF is flat/non-editable.
