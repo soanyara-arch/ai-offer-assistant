@@ -664,11 +664,15 @@ textarea.review-input {
 confirmButton.addEventListener("click", () => {
   const reviewedOffer = {};
 
-  document
-    .querySelectorAll("#offerResults input, #offerResults textarea")
-    .forEach((input) => {
-      reviewedOffer[input.dataset.field] = input.value.trim() || null;
-    });
+ document
+  .querySelectorAll("#offerResults input, #offerResults textarea")
+  .forEach((input) => {
+    const fieldName = input.dataset.field || input.name || input.id;
+
+    if (fieldName) {
+      reviewedOffer[fieldName] = input.value.trim() || null;
+    }
+  });
 
  const stillMissing = Array.from(
   document.querySelectorAll("#offerResults input, #offerResults textarea")
