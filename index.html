@@ -1094,6 +1094,23 @@ const completionDate =
 
 const legalDescription =
   document.getElementById("legal_description")?.value || "";
+    const chattelsIncluded =
+  document.getElementById("chattels_included")?.value || "";
+
+const fixturesExcluded =
+  document.getElementById("fixtures_excluded")?.value || "";
+
+const rentalItems =
+  document.getElementById("rental_items")?.value || "";
+
+const conditions =
+  document.getElementById("conditions")?.value || "";
+
+const titleSearchDate =
+  document.getElementById("title_search_date")?.value || "";
+
+const additionalInstructions =
+  document.getElementById("additional_instructions")?.value || "";
     const pdfUrl = "form100-clean.pdf";
 
     const existingPdfBytes =
@@ -1170,42 +1187,429 @@ const pages =
 const firstPage =
   pages[0];
 
- // Write clean permanent text directly onto the APS.
-// Editing happens on the website; the generated PDF is flat/non-editable.
+// ======================================================
+// COMPLETE APS MAPPER
+// Website fields remain editable.
+// Generated PDF is flattened/non-editable.
+// ======================================================
 
-firstPage.drawText(buyerNames, {
-  x: 105,
-  y: 657,
-  size: 11,
-  font
-});
+const page1 = pages[0];
+const page2 = pages[1];
+const page3 = pages[2];
+const scheduleA = pages[5];
 
-firstPage.drawText(sellerNames, {
-  x: 105,
-  y: 628,
-  size: 11,
-  font
-});
-firstPage.drawText(sellerNames, {
-  x: 105,
-  y: 628,
-  size: 11,
-  font
-});
 
-// Page 1 block is temporarily gone
-    // ---------- PAGE 1 APS FIELDS ----------
+// ---------- HELPERS ----------
 
-// Property Address
-if (propertyAddress) {
-  firstPage.drawText(propertyAddress, {
-    x: 105,
-    y: 575,
-    size: 11,
+function clean(value) {
+  return String(value || "").trim();
+}
+
+function money(value) {
+  if (!value) return "";
+
+  const number =
+    Number(String(value).replace(/[$,\s]/g, ""));
+
+  if (Number.isNaN(number)) {
+    return String(value);
+  }
+
+  return number.toLocaleString("en-CA", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function formatDate(value) {
+  if (!value) return "";
+
+  const parts = String(value).split("-");
+
+  if (parts.length !== 3) {
+    return String(value);
+  }
+
+  const [year, month, day] = parts;
+
+  const months = [
+    "January", "February", "March",
+    "April", "May", "June",
+    "July", "August", "September",
+    "October", "November", "December"
+  ];
+
+  return `${months[Number(month) - 1]} ${Number(day)}, ${year}`;
+}
+
+function formatTime(value) {
+  if (!value) return "";
+
+  const parts = String(value).split(":");
+  let hour = Number(parts[0]);
+  const minute = parts[1] || "00";
+
+  if (Number.isNaN(hour)) {
+    return String(value);
+  }
+
+  const suffix = hour >= 12 ? "p.m." : "a.m.";
+
+  hour = hour % 12 || 12;
+
+  return `${hour}:${minute} ${suffix}`;
+}
+
+
+// Draw text but automatically shrink it if it is too long.
+function drawFit(page, text, options) {
+
+  text = clean(text);
+
+  if (!text) return;
+
+  const {
+    x,
+    y,
+    maxWidth,
+    size = 11,
+    minSize = 7
+  } = options;
+
+  let fontSize = size;
+
+  while (
+    font.widthOfTextAtSize(text, fontSize) > maxWidth &&
+    fontSize > minSize
+  ) {
+    fontSize -= 0.25;
+  }
+
+  page.drawText(text, {
+    x,
+    y,
+    size: fontSize,
     font
   });
 }
 
+
+// Wrap longer text over several lines.
+function drawWrapped(page, text, options) {
+
+  text = clean(text);
+
+  if (!text) return;
+
+  const {
+    x,
+    y,
+    maxWidth,
+    size = 9,
+    lineHeight = 18,
+    maxLines = 4
+  } = options;
+
+  const words = text.split(/\s+/);
+
+  const lines = [];
+  let currentLine = "";
+
+  for (const word of words) {
+
+    const testLine =
+      currentLine ? `${currentLine} ${word}` : word;
+
+    const width =
+      font.widthOfTextAtSize(testLine, size);
+
+    if (width <= maxWidth) {
+      currentLine = testLine;
+    } else {
+
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+
+      currentLine = word;
+
+      if (lines.length >= maxLines - 1) {
+        break;
+      }
+    }
+  }
+
+  if (
+    currentLine &&
+    lines.length < maxLines
+  ) {
+    lines.push(currentLine);
+  }
+
+  lines.forEach((line, index) => {
+
+    page.drawText(line, {
+      x,
+      y: y - (index * lineHeight),
+      size,
+      font
+    });
+
+  });
+}
+
+
+// ======================================================
+// PAGE 1
+// ======================================================
+
+// BUYER — confirmed position
+drawFit(page1, buyerNames, {
+  x: 105,
+  y: 657,
+  maxWidth: 385,
+  size: 11
+});
+
+// SELLER — confirmed position
+drawFit(page1, sellerNames, {
+  x: 105,
+  y: 628,
+  maxWidth: 415,
+  size: 11
+});
+
+// PROPERTY ADDRESS — confirmed position
+drawFit(page1, propertyAddress, {
+  x: 105,
+  y: 575,
+  maxWidth: 485,
+  size: 11
+});
+
+// LEGAL DESCRIPTION
+drawFit(page1, legalDescription, {
+  x: 42,
+  y: 447,
+  maxWidth: 485,
+  size: 9
+});
+
+// PURCHASE PRICE
+drawFit(page1, money(purchasePrice), {
+  x: 405,
+  y: 414,
+  maxWidth: 155,
+  size: 10
+});
+
+// DEPOSIT AMOUNT
+drawFit(page1, money(depositAmount), {
+  x: 405,
+  y: 338,
+  maxWidth: 155,
+  size: 10
+});
+
+// DEPOSIT TIMING
+drawFit(page1, depositTiming, {
+  x: 180,
+  y: 369,
+  maxWidth: 325,
+  size: 9
+});
+
+// DEPOSIT HOLDER
+drawFit(page1, depositHolder, {
+  x: 160,
+  y: 312,
+  maxWidth: 325,
+  size: 9
+});
+
+// IRREVOCABLE BY
+drawFit(page1, irrevocableBy, {
+  x: 245,
+  y: 188,
+  maxWidth: 145,
+  size: 9
+});
+
+// IRREVOCABLE TIME
+drawFit(page1, formatTime(irrevocableTime), {
+  x: 455,
+  y: 188,
+  maxWidth: 100,
+  size: 9
+});
+
+// IRREVOCABLE DATE
+drawFit(page1, formatDate(irrevocableDate), {
+  x: 100,
+  y: 160,
+  maxWidth: 210,
+  size: 9
+});
+
+// COMPLETION DATE
+drawFit(page1, formatDate(completionDate), {
+  x: 330,
+  y: 119,
+  maxWidth: 230,
+  size: 9
+});
+
+
+// ======================================================
+// PAGE 2
+// ======================================================
+
+// CHATTELS INCLUDED
+drawWrapped(page2, chattelsIncluded, {
+  x: 60,
+  y: 545,
+  maxWidth: 480,
+  size: 9,
+  lineHeight: 22,
+  maxLines: 4
+});
+
+// FIXTURES EXCLUDED
+drawWrapped(page2, fixturesExcluded, {
+  x: 60,
+  y: 390,
+  maxWidth: 480,
+  size: 9,
+  lineHeight: 22,
+  maxLines: 4
+});
+
+// RENTAL ITEMS
+drawWrapped(page2, rentalItems, {
+  x: 60,
+  y: 250,
+  maxWidth: 480,
+  size: 9,
+  lineHeight: 22,
+  maxLines: 3
+});
+
+
+// ======================================================
+// PAGE 3
+// ======================================================
+
+// TITLE SEARCH / REQUISITION DATE
+drawFit(page3, formatDate(titleSearchDate), {
+  x: 365,
+  y: 714,
+  maxWidth: 150,
+  size: 8
+});
+
+
+// ======================================================
+// SCHEDULE A — PAGE 6
+// ======================================================
+
+// Repeat transaction information
+drawFit(scheduleA, buyerNames, {
+  x: 78,
+  y: 661,
+  maxWidth: 450,
+  size: 10
+});
+
+drawFit(scheduleA, sellerNames, {
+  x: 78,
+  y: 632,
+  maxWidth: 450,
+  size: 10
+});
+
+drawFit(scheduleA, propertyAddress, {
+  x: 145,
+  y: 603,
+  maxWidth: 390,
+  size: 10
+});
+
+
+// Conditions / additional terms
+let scheduleAText = "";
+
+if (clean(conditions)) {
+  scheduleAText += clean(conditions);
+}
+
+if (clean(additionalInstructions)) {
+
+  if (scheduleAText) {
+    scheduleAText += "\n\n";
+  }
+
+  scheduleAText += clean(additionalInstructions);
+}
+
+
+// Larger Schedule A writing area
+if (scheduleAText) {
+
+  const paragraphs =
+    scheduleAText.split(/\n+/);
+
+  let currentY = 530;
+
+  for (const paragraph of paragraphs) {
+
+    if (!paragraph.trim()) {
+      currentY -= 12;
+      continue;
+    }
+
+    const words =
+      paragraph.trim().split(/\s+/);
+
+    let line = "";
+
+    for (const word of words) {
+
+      const testLine =
+        line ? `${line} ${word}` : word;
+
+      if (
+        font.widthOfTextAtSize(testLine, 9) <= 480
+      ) {
+
+        line = testLine;
+
+      } else {
+
+        scheduleA.drawText(line, {
+          x: 55,
+          y: currentY,
+          size: 9,
+          font
+        });
+
+        currentY -= 14;
+        line = word;
+      }
+    }
+
+    if (line) {
+
+      scheduleA.drawText(line, {
+        x: 55,
+        y: currentY,
+        size: 9,
+        font
+      });
+
+      currentY -= 18;
+    }
+  }
+}
 
     const pdfBytes = await pdfDoc.save();
 
