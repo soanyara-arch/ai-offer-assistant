@@ -1062,8 +1062,7 @@ apsButton.addEventListener("click", async () => {
     const sellerNames =
       document.getElementById("seller_names")?.value || "";
 
-    const pdfUrl =
-      "Agreement%20of%20Purchase%20and%20Sale.pdf";
+    const pdfUrl = "form100.pdf";
 
     const existingPdfBytes =
       await fetch(pdfUrl).then((res) => {
