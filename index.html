@@ -1474,7 +1474,7 @@ const PAGE1_FIELDS = [
     value: legalDescription,
     x: 42,
     y: 447,
-    maxWidth: 485,
+    maxWidth: 480,
     size: 9
   },
 
@@ -1519,7 +1519,7 @@ const PAGE1_FIELDS = [
     value: irrevocableBy,
     x: 315,
     y: 191,
-    maxWidth: 120,
+    maxWidth: 110,
     size: 8
   },
 
@@ -1528,7 +1528,7 @@ const PAGE1_FIELDS = [
     value: irrevocableTime,
     x: 455,
     y: 191,
-    maxWidth: 80,
+    maxWidth: 75,
     size: 8
   },
 
@@ -1551,7 +1551,6 @@ const PAGE1_FIELDS = [
   }
 
 ];
-
 // Draw every Page 1 field
 PAGE1_FIELDS.forEach((field) => {
   drawFit(page1, field.value, {
@@ -1562,15 +1561,7 @@ PAGE1_FIELDS.forEach((field) => {
   });
 });
 
-// Draw every Page 1 field automatically
-PAGE1_FIELDS.forEach((field) => {
-  drawFit(page1, field.value, {
-    x: field.x,
-    y: field.y,
-    maxWidth: field.maxWidth,
-    size: field.size
-  });
-});
+
 
 
 // ======================================================
