@@ -1481,9 +1481,9 @@ const PAGE1_FIELDS = [
   // PURCHASE PRICE
   {
     value: money(purchasePrice),
-    x: 390,
+    x: 355,
     y: 414,
-    maxWidth: 125,
+    maxWidth: 120,
     size: 9
   },
 
@@ -1499,16 +1499,16 @@ const PAGE1_FIELDS = [
   // DEPOSIT AMOUNT
   {
     value: money(depositAmount),
-    x: 430,
+    x: 335,
     y: 338,
-    maxWidth: 125,
+    maxWidth: 120,
     size: 9
   },
 
   // DEPOSIT HOLDER
   {
     value: depositHolder,
-    x: 180,
+    x: 175,
     y: 304,
     maxWidth: 270,
     size: 9
@@ -1519,7 +1519,7 @@ const PAGE1_FIELDS = [
     value: irrevocableBy,
     x: 315,
     y: 191,
-    maxWidth: 110,
+    maxWidth: 100,
     size: 8
   },
 
@@ -1528,7 +1528,7 @@ const PAGE1_FIELDS = [
     value: irrevocableTime,
     x: 455,
     y: 191,
-    maxWidth: 75,
+    maxWidth: 70,
     size: 8
   },
 
@@ -1537,7 +1537,7 @@ const PAGE1_FIELDS = [
     value: formatDate(irrevocableDate),
     x: 105,
     y: 160,
-    maxWidth: 190,
+    maxWidth: 180,
     size: 8
   },
 
@@ -1546,11 +1546,12 @@ const PAGE1_FIELDS = [
     value: formatDate(completionDate),
     x: 330,
     y: 119,
-    maxWidth: 210,
+    maxWidth: 200,
     size: 8
   }
 
 ];
+
 // Draw every Page 1 field
 PAGE1_FIELDS.forEach((field) => {
   drawFit(page1, field.value, {
