@@ -1359,104 +1359,92 @@ function drawWrapped(page, text, options) {
 }
 
 
-// ======================================================
-// PAGE 1
-// ======================================================
+// =================================================
+// PAGE 1 — MASTER FIELD MAP
+// Change positions HERE only
+// =================================================
 
-// BUYER — confirmed position
-drawFit(page1, buyerNames, {
-  x: 105,
-  y: 657,
-  maxWidth: 385,
-  size: 11
-});
+const PAGE1_FIELDS = [
+  {
+    value: buyerNames,
+    x: 105,
+    y: 657,
+    maxWidth: 385,
+    size: 11
+  },
+  {
+    value: sellerNames,
+    x: 105,
+    y: 628,
+    maxWidth: 415,
+    size: 11
+  },
+  {
+    value: propertyAddress,
+    x: 105,
+    y: 575,
+    maxWidth: 485,
+    size: 11
+  },
+  {
+    value: legalDescription,
+    x: 42,
+    y: 447,
+    maxWidth: 485,
+    size: 9
+  },
+  {
+    value: money(purchasePrice),
+    x: 405,
+    y: 414,
+    maxWidth: 155,
+    size: 10
+  },
+  {
+    value: money(depositAmount),
+    x: 405,
+    y: 338,
+    maxWidth: 155,
+    size: 10
+  },
+  {
+    value: depositTiming,
+    x: 180,
+    y: 369,
+    maxWidth: 325,
+    size: 9
+  },
+  {
+    value: depositHolder,
+    x: 455,
+    y: 188,
+    maxWidth: 100,
+    size: 9
+  },
+  {
+    value: formatDate(irrevocableDate),
+    x: 100,
+    y: 160,
+    maxWidth: 210,
+    size: 9
+  },
+  {
+    value: formatDate(completionDate),
+    x: 330,
+    y: 119,
+    maxWidth: 230,
+    size: 9
+  }
+];
 
-// SELLER — confirmed position
-drawFit(page1, sellerNames, {
-  x: 105,
-  y: 628,
-  maxWidth: 415,
-  size: 11
-});
-
-// PROPERTY ADDRESS — confirmed position
-drawFit(page1, propertyAddress, {
-  x: 105,
-  y: 575,
-  maxWidth: 485,
-  size: 11
-});
-
-// LEGAL DESCRIPTION
-drawFit(page1, legalDescription, {
-  x: 42,
-  y: 447,
-  maxWidth: 485,
-  size: 9
-});
-
-// PURCHASE PRICE
-drawFit(page1, money(purchasePrice), {
-  x: 405,
-  y: 414,
-  maxWidth: 155,
-  size: 10
-});
-
-// DEPOSIT AMOUNT
-drawFit(page1, money(depositAmount), {
-  x: 405,
-  y: 338,
-  maxWidth: 155,
-  size: 10
-});
-
-// DEPOSIT TIMING
-drawFit(page1, depositTiming, {
-  x: 180,
-  y: 369,
-  maxWidth: 325,
-  size: 9
-});
-
-// DEPOSIT HOLDER
-drawFit(page1, depositHolder, {
-  x: 160,
-  y: 312,
-  maxWidth: 325,
-  size: 9
-});
-
-// IRREVOCABLE BY
-drawFit(page1, irrevocableBy, {
-  x: 245,
-  y: 188,
-  maxWidth: 145,
-  size: 9
-});
-
-// IRREVOCABLE TIME
-drawFit(page1, formatTime(irrevocableTime), {
-  x: 455,
-  y: 188,
-  maxWidth: 100,
-  size: 9
-});
-
-// IRREVOCABLE DATE
-drawFit(page1, formatDate(irrevocableDate), {
-  x: 100,
-  y: 160,
-  maxWidth: 210,
-  size: 9
-});
-
-// COMPLETION DATE
-drawFit(page1, formatDate(completionDate), {
-  x: 330,
-  y: 119,
-  maxWidth: 230,
-  size: 9
+// Draw every Page 1 field automatically
+PAGE1_FIELDS.forEach((field) => {
+  drawFit(page1, field.value, {
+    x: field.x,
+    y: field.y,
+    maxWidth: field.maxWidth,
+    size: field.size
+  });
 });
 
 
