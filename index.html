@@ -1445,7 +1445,7 @@ const PAGE1_FIELDS = [
   // BUYER
   {
     value: buyerNames,
-    x: 105,
+    x: 80,
     y: 657,
     maxWidth: 385,
     size: 10
@@ -1454,7 +1454,7 @@ const PAGE1_FIELDS = [
   // SELLER
   {
     value: sellerNames,
-    x: 105,
+    x: 80,
     y: 628,
     maxWidth: 415,
     size: 10
@@ -1463,7 +1463,7 @@ const PAGE1_FIELDS = [
   // PROPERTY ADDRESS
   {
     value: propertyAddress,
-    x: 105,
+    x: 80,
     y: 575,
     maxWidth: 485,
     size: 10
@@ -1472,7 +1472,7 @@ const PAGE1_FIELDS = [
   // LEGAL DESCRIPTION
   {
     value: legalDescription,
-    x: 42,
+    x: 80,
     y: 447,
     maxWidth: 480,
     size: 9
@@ -1482,7 +1482,7 @@ const PAGE1_FIELDS = [
   {
     value: money(purchasePrice),
     x: 355,
-    y: 414,
+    y: 423,
     maxWidth: 120,
     size: 9
   },
@@ -1491,7 +1491,7 @@ const PAGE1_FIELDS = [
   {
     value: depositTiming,
     x: 175,
-    y: 369,
+    y: 378,
     maxWidth: 300,
     size: 9
   },
@@ -1500,7 +1500,7 @@ const PAGE1_FIELDS = [
   {
     value: money(depositAmount),
     x: 335,
-    y: 338,
+    y: 347,
     maxWidth: 120,
     size: 9
   },
@@ -1509,7 +1509,7 @@ const PAGE1_FIELDS = [
   {
     value: depositHolder,
     x: 175,
-    y: 304,
+    y: 313,
     maxWidth: 270,
     size: 9
   },
@@ -1518,7 +1518,7 @@ const PAGE1_FIELDS = [
   {
     value: irrevocableBy,
     x: 315,
-    y: 191,
+    y: 206,
     maxWidth: 100,
     size: 8
   },
@@ -1527,28 +1527,72 @@ const PAGE1_FIELDS = [
   {
     value: irrevocableTime,
     x: 455,
-    y: 191,
+    y: 206,
     maxWidth: 70,
     size: 8
   },
 
-  // IRREVOCABLE DATE
-  {
-    value: formatDate(irrevocableDate),
-    x: 105,
-    y: 160,
-    maxWidth: 180,
-    size: 8
-  },
+// IRREVOCABLE DAY
+{
+  value: irrevocableDate ? String(new Date(irrevocableDate + "T00:00:00").getDate()) : "",
+  x: 100,
+  y: 175,
+  maxWidth: 30,
+  size: 8
+},
 
-  // COMPLETION DATE
-  {
-    value: formatDate(completionDate),
-    x: 330,
-    y: 119,
-    maxWidth: 200,
-    size: 8
-  }
+// IRREVOCABLE MONTH
+{
+  value: irrevocableDate
+    ? new Date(irrevocableDate + "T00:00:00").toLocaleString("en-CA", { month: "long" })
+    : "",
+  x: 185,
+  y: 175,
+  maxWidth: 100,
+  size: 8
+},
+
+// IRREVOCABLE YEAR
+{
+  value: irrevocableDate
+    ? String(new Date(irrevocableDate + "T00:00:00").getFullYear())
+    : "",
+  x: 305,
+  y: 175,
+  maxWidth: 45,
+  size: 8
+},
+
+ // COMPLETION DAY
+{
+  value: completionDate ? String(new Date(completionDate + "T00:00:00").getDate()) : "",
+  x: 250,
+  y: 119,
+  maxWidth: 30,
+  size: 8
+},
+
+// COMPLETION MONTH
+{
+  value: completionDate
+    ? new Date(completionDate + "T00:00:00").toLocaleString("en-CA", { month: "long" })
+    : "",
+  x: 325,
+  y: 119,
+  maxWidth: 100,
+  size: 8
+},
+
+// COMPLETION YEAR
+{
+  value: completionDate
+    ? String(new Date(completionDate + "T00:00:00").getFullYear())
+    : "",
+  x: 455,
+  y: 119,
+  maxWidth: 45,
+  size: 8
+}
 
 ];
 
