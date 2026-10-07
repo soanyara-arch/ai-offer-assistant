@@ -1445,7 +1445,7 @@ const PAGE1_FIELDS = [
   // BUYER
   {
     value: buyerNames,
-    x: 80,
+    x: 100,
     y: 657,
     maxWidth: 385,
     size: 10
@@ -1454,7 +1454,7 @@ const PAGE1_FIELDS = [
   // SELLER
   {
     value: sellerNames,
-    x: 80,
+    x: 100,
     y: 628,
     maxWidth: 415,
     size: 10
@@ -1463,7 +1463,7 @@ const PAGE1_FIELDS = [
   // PROPERTY ADDRESS
   {
     value: propertyAddress,
-    x: 80,
+    x: 100,
     y: 575,
     maxWidth: 485,
     size: 10
@@ -1472,7 +1472,7 @@ const PAGE1_FIELDS = [
   // LEGAL DESCRIPTION
   {
     value: legalDescription,
-    x: 80,
+    x: 100,
     y: 447,
     maxWidth: 480,
     size: 9
@@ -1481,7 +1481,7 @@ const PAGE1_FIELDS = [
   // PURCHASE PRICE
   {
     value: money(purchasePrice),
-    x: 355,
+    x: 330,
     y: 423,
     maxWidth: 120,
     size: 9
@@ -1490,7 +1490,7 @@ const PAGE1_FIELDS = [
   // DEPOSIT TIMING
   {
     value: depositTiming,
-    x: 175,
+    x: 190,
     y: 378,
     maxWidth: 300,
     size: 9
@@ -1499,7 +1499,7 @@ const PAGE1_FIELDS = [
   // DEPOSIT AMOUNT
   {
     value: money(depositAmount),
-    x: 335,
+    x: 315,
     y: 347,
     maxWidth: 120,
     size: 9
@@ -1508,7 +1508,7 @@ const PAGE1_FIELDS = [
   // DEPOSIT HOLDER
   {
     value: depositHolder,
-    x: 175,
+    x: 210,
     y: 313,
     maxWidth: 270,
     size: 9
@@ -1517,7 +1517,7 @@ const PAGE1_FIELDS = [
   // IRREVOCABLE BY
   {
     value: irrevocableBy,
-    x: 315,
+    x: 375,
     y: 206,
     maxWidth: 100,
     size: 8
@@ -1526,7 +1526,7 @@ const PAGE1_FIELDS = [
   // IRREVOCABLE TIME
   {
     value: irrevocableTime,
-    x: 455,
+    x: 425,
     y: 206,
     maxWidth: 70,
     size: 8
@@ -1535,7 +1535,7 @@ const PAGE1_FIELDS = [
 // IRREVOCABLE DAY
 {
   value: irrevocableDate ? String(new Date(irrevocableDate + "T00:00:00").getDate()) : "",
-  x: 100,
+  x: 125,
   y: 175,
   maxWidth: 30,
   size: 8
@@ -1546,7 +1546,7 @@ const PAGE1_FIELDS = [
   value: irrevocableDate
     ? new Date(irrevocableDate + "T00:00:00").toLocaleString("en-CA", { month: "long" })
     : "",
-  x: 185,
+  x: 200,
   y: 175,
   maxWidth: 100,
   size: 8
@@ -1557,7 +1557,7 @@ const PAGE1_FIELDS = [
   value: irrevocableDate
     ? String(new Date(irrevocableDate + "T00:00:00").getFullYear())
     : "",
-  x: 305,
+  x: 315,
   y: 175,
   maxWidth: 45,
   size: 8
@@ -1566,7 +1566,7 @@ const PAGE1_FIELDS = [
  // COMPLETION DAY
 {
   value: completionDate ? String(new Date(completionDate + "T00:00:00").getDate()) : "",
-  x: 250,
+  x: 275,
   y: 119,
   maxWidth: 30,
   size: 8
@@ -1577,7 +1577,7 @@ const PAGE1_FIELDS = [
   value: completionDate
     ? new Date(completionDate + "T00:00:00").toLocaleString("en-CA", { month: "long" })
     : "",
-  x: 325,
+  x: 340,
   y: 119,
   maxWidth: 100,
   size: 8
@@ -1588,7 +1588,7 @@ const PAGE1_FIELDS = [
   value: completionDate
     ? String(new Date(completionDate + "T00:00:00").getFullYear())
     : "",
-  x: 455,
+  x: 465,
   y: 119,
   maxWidth: 45,
   size: 8
