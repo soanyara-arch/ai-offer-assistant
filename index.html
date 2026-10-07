@@ -437,7 +437,41 @@ textarea.review-input {
     <div class="divider">
       <span>OR TYPE</span>
     </div>
+<!-- REAL ESTATE PDF UPLOAD -->
+<div id="pdfUploadSection" style="margin-bottom: 30px;">
 
+    <h2>Upload Agreement of Purchase and Sale</h2>
+
+    <p>
+        Upload the Agreement of Purchase and Sale you want AI to complete.
+    </p>
+
+    <input
+        type="file"
+        id="pdfUpload"
+        accept="application/pdf"
+    >
+
+    <p id="pdfFileName" style="margin-top: 10px;"></p>
+
+    <div id="pdfPreviewContainer" style="display:none; margin-top:20px;">
+        <h3>Document Preview</h3>
+
+        <div
+            id="pdfPages"
+            style="
+                width:100%;
+                max-height:700px;
+                overflow-y:auto;
+                background:#e5e7eb;
+                padding:20px;
+                box-sizing:border-box;
+                border-radius:10px;
+            "
+        ></div>
+    </div>
+
+</div>
     <label class="form-label">
       Tell me about the offer
     </label>
