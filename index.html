@@ -1228,6 +1228,7 @@ const firstPage =
 // ======================================================
 
 const page1 = pages[0];
+drawCoordinateGrid(page1);
 const page2 = pages[1];
 const page3 = pages[2];
 const scheduleA = pages[5];
@@ -1326,7 +1327,44 @@ function drawFit(page, text, options) {
     font
   });
 }
+// TEMPORARY PDF COORDINATE GRID
+function drawCoordinateGrid(page) {
+  const { width, height } = page.getSize();
 
+  for (let x = 0; x <= width; x += 25) {
+    page.drawLine({
+      start: { x: x, y: 0 },
+      end: { x: x, y: height },
+      thickness: 0.25
+    });
+
+    if (x > 0) {
+      page.drawText(String(x), {
+        x: x + 2,
+        y: height - 12,
+        size: 5,
+        font
+      });
+    }
+  }
+
+  for (let y = 0; y <= height; y += 25) {
+    page.drawLine({
+      start: { x: 0, y: y },
+      end: { x: width, y: y },
+      thickness: 0.25
+    });
+
+    if (y > 0) {
+      page.drawText(String(y), {
+        x: 2,
+        y: y + 2,
+        size: 5,
+        font
+      });
+    }
+  }
+}
 
 // Wrap longer text over several lines.
 function drawWrapped(page, text, options) {
