@@ -1398,28 +1398,40 @@ function drawWrapped(page, text, options) {
 // Change positions HERE only
 // =================================================
 
+// ==================================================
+// PAGE 1 - MASTER FIELD MAP
+// ==================================================
+
 const PAGE1_FIELDS = [
+
+  // BUYER
   {
     value: buyerNames,
     x: 105,
     y: 657,
     maxWidth: 385,
-    size: 11
+    size: 10
   },
+
+  // SELLER
   {
     value: sellerNames,
     x: 105,
     y: 628,
     maxWidth: 415,
-    size: 11
+    size: 10
   },
+
+  // PROPERTY ADDRESS
   {
     value: propertyAddress,
     x: 105,
     y: 575,
     maxWidth: 485,
-    size: 11
+    size: 10
   },
+
+  // LEGAL DESCRIPTION
   {
     value: legalDescription,
     x: 42,
@@ -1427,49 +1439,90 @@ const PAGE1_FIELDS = [
     maxWidth: 485,
     size: 9
   },
+
+  // PURCHASE PRICE
   {
     value: money(purchasePrice),
-    x: 405,
+    x: 430,
     y: 414,
-    maxWidth: 155,
-    size: 10
+    maxWidth: 125,
+    size: 9
   },
-  {
-    value: money(depositAmount),
-    x: 405,
-    y: 338,
-    maxWidth: 155,
-    size: 10
-  },
+
+  // DEPOSIT TIMING
   {
     value: depositTiming,
-    x: 180,
+    x: 175,
     y: 369,
-    maxWidth: 325,
+    maxWidth: 300,
     size: 9
   },
+
+  // DEPOSIT AMOUNT
+  {
+    value: money(depositAmount),
+    x: 430,
+    y: 338,
+    maxWidth: 125,
+    size: 9
+  },
+
+  // DEPOSIT HOLDER
   {
     value: depositHolder,
-    x: 455,
-    y: 188,
-    maxWidth: 100,
+    x: 180,
+    y: 304,
+    maxWidth: 270,
     size: 9
   },
+
+  // IRREVOCABLE BY
+  {
+    value: irrevocableBy,
+    x: 315,
+    y: 191,
+    maxWidth: 120,
+    size: 8
+  },
+
+  // IRREVOCABLE TIME
+  {
+    value: irrevocableTime,
+    x: 455,
+    y: 191,
+    maxWidth: 80,
+    size: 8
+  },
+
+  // IRREVOCABLE DATE
   {
     value: formatDate(irrevocableDate),
-    x: 100,
+    x: 105,
     y: 160,
-    maxWidth: 210,
-    size: 9
+    maxWidth: 190,
+    size: 8
   },
+
+  // COMPLETION DATE
   {
     value: formatDate(completionDate),
     x: 330,
     y: 119,
-    maxWidth: 230,
-    size: 9
+    maxWidth: 210,
+    size: 8
   }
+
 ];
+
+// Draw every Page 1 field
+PAGE1_FIELDS.forEach((field) => {
+  drawFit(page1, field.value, {
+    x: field.x,
+    y: field.y,
+    maxWidth: field.maxWidth,
+    size: field.size
+  });
+});
 
 // Draw every Page 1 field automatically
 PAGE1_FIELDS.forEach((field) => {
